@@ -34,7 +34,7 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 24px rgba(15, 23, 42, 0.06);
-  padding: 0 0 0 1.5rem;
+  padding: 0 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -268,6 +268,149 @@ body {
 
 .nav-user-role.role-user {
     color: var(--text-light);
+}
+
+/* User dropdown (regular user) */
+.nav-user-dropdown {
+  position: relative;
+}
+
+.nav-user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.85rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.nav-user-trigger:hover,
+.nav-user-trigger.open {
+  border-color: rgba(37, 99, 235, 0.35);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.nav-user-trigger-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: white;
+  flex-shrink: 0;
+}
+
+.nav-user-trigger-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-user-trigger-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.nav-user-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-light);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.nav-user-trigger.open .nav-user-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-user-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 220px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  padding: 0.4rem;
+  z-index: 200;
+  animation: dropdownFade 0.15s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-user-menu-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.nav-user-menu-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+}
+
+.nav-user-trigger-icon-admin {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+}
+
+.nav-user-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.35rem 0;
+}
+
+.nav-user-menu-logout {
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: #dc2626;
+}
+
+.nav-user-menu-logout svg {
+  color: #dc2626;
+}
+
+.nav-user-menu-logout:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.nav-user-menu-logout:hover svg {
+  color: #b91c1c;
 }
 
 .nav-toggle {
@@ -1790,8 +1933,12 @@ body {
         margin-left: auto;
     }
 
-    .nav-user-details {
-        display: none;
+    .nav-user-menu {
+        position: fixed;
+        top: 72px;
+        left: 1rem;
+        right: 1rem;
+        min-width: unset;
     }
 
     .btn-nav-logout {
