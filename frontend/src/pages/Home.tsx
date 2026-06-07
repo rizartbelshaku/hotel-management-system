@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Hotel, Room } from '../types';
 import { hotelAPI, roomAPI } from '../services/api';
@@ -8,6 +8,31 @@ interface HotelWithRooms extends Hotel {
   rooms: Room[];
   minPrice: number | null;
 }
+
+const FeatureIcon = ({ type }: { type: 'hotel' | 'bolt' | 'calendar' }) => {
+  const icons = {
+    hotel: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4" />
+      </svg>
+    ),
+    bolt: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
+    calendar: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+  };
+
+  return icons[type];
+};
 
 const Home = () => {
   const { user } = useAuth();
@@ -38,22 +63,30 @@ const Home = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const totalRooms = useMemo(
+    () => hotels.reduce((sum, hotel) => sum + hotel.rooms.length, 0),
+    [hotels]
+  );
+
+  const heroImage = hotels[0]?.image
+    || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80';
 
   return (
     <div className="home">
       <section className="landing-hero">
-        <div
-          className="landing-hero-bg"
-          style={{
-            backgroundImage: hotels[0]?.image
-              ? `url(${hotels[0].image})`
-              : 'url(https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80)',
-          }}
-        />
+        <div className="landing-hero-bg" style={{ backgroundImage: `url(${heroImage})` }} />
         <div className="landing-hero-overlay" />
+        <div className="landing-hero-shapes" aria-hidden="true">
+          <span className="landing-hero-shape landing-hero-shape-1" />
+          <span className="landing-hero-shape landing-hero-shape-2" />
+        </div>
+
         <div className="landing-hero-content">
-          <span className="landing-badge">✦ Your next stay awaits</span>
-          <h1>Discover Luxury Hotels & Book Your Perfect Room</h1>
+          <span className="landing-badge">Your next stay awaits</span>
+          <h1>
+            Discover Luxury Hotels &amp;
+            <span> Book Your Perfect Room</span>
+          </h1>
           <p>
             Browse handpicked hotels across Albania and reserve your dream stay
             in just a few clicks.
@@ -64,6 +97,7 @@ const Home = () => {
               <Link to="/register" className="btn btn-hero-secondary">Get Started</Link>
             )}
           </div>
+
           <div className="landing-stats">
             <div className="landing-stat">
               <strong>{hotels.length}</strong>
@@ -74,14 +108,24 @@ const Home = () => {
               <span>Cities</span>
             </div>
             <div className="landing-stat">
+              <strong>{totalRooms}</strong>
+              <span>Rooms</span>
+            </div>
+            <div className="landing-stat">
               <strong>24/7</strong>
-              <span>Online Booking</span>
+              <span>Booking</span>
             </div>
           </div>
         </div>
+
+        <a href="#hotels" className="landing-hero-scroll" aria-label="Scroll to hotels">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+        </a>
       </section>
 
-      <section id="hotels" className="landing-section">
+      <section id="hotels" className="landing-section landing-hotels-section">
         <div className="landing-container">
           <div className="landing-section-header">
             <span className="landing-label">Our Hotels</span>
@@ -90,7 +134,10 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="landing-loading">Loading hotels...</div>
+            <div className="landing-loading">
+              <span className="landing-loading-spinner" />
+              <p>Loading hotels...</p>
+            </div>
           ) : hotels.length === 0 ? (
             <p className="empty-state">No hotels available at the moment.</p>
           ) : (
@@ -103,6 +150,7 @@ const Home = () => {
                     ) : (
                       <div className="landing-hotel-placeholder">{hotel.name}</div>
                     )}
+                    <span className="landing-hotel-city-tag">{hotel.city}</span>
                     {hotel.minPrice !== null && (
                       <span className="landing-price-tag">From ${hotel.minPrice}/night</span>
                     )}
@@ -120,16 +168,23 @@ const Home = () => {
                         </span>
                       </div>
                     </div>
-                    <p>
+                    <p className="landing-hotel-desc">
                       {hotel.description?.slice(0, 100)}
                       {(hotel.description?.length ?? 0) > 100 ? '...' : ''}
                     </p>
                     <div className="landing-hotel-footer">
                       <span className="landing-room-count">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M2 4v16h20V4H2z" />
+                          <path d="M2 10h20M10 4v16" />
+                        </svg>
                         {hotel.rooms.length} room{hotel.rooms.length !== 1 ? 's' : ''} available
                       </span>
                       <Link to={`/hotels/${hotel.id}`} className="btn btn-landing">
-                        View & Book
+                        View &amp; Book
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
                       </Link>
                     </div>
                   </div>
@@ -145,6 +200,7 @@ const Home = () => {
           <div className="landing-section-header">
             <span className="landing-label">Experience</span>
             <h2>Luxury at Every Corner</h2>
+            <p>Everything you need for an unforgettable stay.</p>
           </div>
           <div className="landing-gallery-grid">
             <div className="landing-gallery-item landing-gallery-tall">
@@ -157,7 +213,7 @@ const Home = () => {
             </div>
             <div className="landing-gallery-item">
               <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=80" alt="Spa wellness" loading="lazy" />
-              <span>Spa & Wellness</span>
+              <span>Spa &amp; Wellness</span>
             </div>
             <div className="landing-gallery-item landing-gallery-wide">
               <img src="https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=900&q=80" alt="Scenic view" loading="lazy" />
@@ -167,11 +223,12 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="landing-section">
+      <section className="landing-section landing-steps-section">
         <div className="landing-container">
           <div className="landing-section-header">
             <span className="landing-label">How It Works</span>
             <h2>Book in 3 Simple Steps</h2>
+            <p>From browsing to confirmation — fast and effortless.</p>
           </div>
           <div className="landing-steps">
             <div className="landing-step">
@@ -195,19 +252,29 @@ const Home = () => {
 
       <section className="landing-section landing-features-section">
         <div className="landing-container">
+          <div className="landing-section-header">
+            <span className="landing-label">Why HotelBook</span>
+            <h2>Everything You Need</h2>
+          </div>
           <div className="landing-features">
             <div className="landing-feature">
-              <div className="landing-feature-icon">🏨</div>
+              <div className="landing-feature-icon">
+                <FeatureIcon type="hotel" />
+              </div>
               <h3>Premium Hotels</h3>
-              <p>Carefully selected properties across Albania's top cities.</p>
+              <p>Carefully selected properties across Albania&apos;s top cities.</p>
             </div>
             <div className="landing-feature">
-              <div className="landing-feature-icon">⚡</div>
+              <div className="landing-feature-icon landing-feature-icon-violet">
+                <FeatureIcon type="bolt" />
+              </div>
               <h3>Instant Booking</h3>
               <p>Reserve your room online quickly with real-time availability.</p>
             </div>
             <div className="landing-feature">
-              <div className="landing-feature-icon">📋</div>
+              <div className="landing-feature-icon landing-feature-icon-emerald">
+                <FeatureIcon type="calendar" />
+              </div>
               <h3>Manage Reservations</h3>
               <p>View, track, and cancel bookings easily from your profile.</p>
             </div>
@@ -219,14 +286,11 @@ const Home = () => {
         <section className="landing-cta">
           <div
             className="landing-cta-bg"
-            style={{
-              backgroundImage: hotels[0]?.image
-                ? `url(${hotels[0].image})`
-                : 'url(https://images.unsplash.com/photo-1520250497591-112f2f40a3b4?w=1920&q=80)',
-            }}
+            style={{ backgroundImage: `url(${heroImage})` }}
           />
           <div className="landing-cta-overlay" />
           <div className="landing-container landing-cta-content">
+            <span className="landing-cta-badge">Start today</span>
             <h2>Ready for Your Next Getaway?</h2>
             <p>Create a free account and start booking your dream hotel today.</p>
             <div className="landing-cta-buttons">
