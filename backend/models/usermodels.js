@@ -1,26 +1,36 @@
-const mongoose = require('mongoose')
+const { pool } = require('../connect/database');
 
-const userSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-    },
+const findByEmail = async (email) => {
+  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  return result.rows[0];
+};
 
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
-    },
+const findById = async (id) => {
+  const result = await pool.query(
+    'SELECT id, name, email, role, created_at FROM users WHERE id = $1',
+    [id]
+  );
+  return result.rows[0];
+};
 
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-    },
-  },
-  {
-    timestamps: true,
-  }
-)
+const create = async ({ name, email, password, role = 'user' }) => {
+  const result = await pool.query(
+    'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role',
+    [name, email, password, role]
+  );
+  return result.rows[0];
+};
 
-module.exports = mongoose.model('User', userSchema)
+const findAll = async () => {
+  const result = await pool.query(
+    'SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC'
+  );
+  return result.rows;
+};
+
+const count = async () => {
+  const result = await pool.query('SELECT COUNT(*) FROM users');
+  return parseInt(result.rows[0].count, 10);
+};
+
+module.exports = { findByEmail, findById, create, findAll, count };
