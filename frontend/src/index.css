@@ -739,41 +739,6 @@ body {
     margin-bottom: 3.25rem;
 }
 
-.landing-hero-scroll {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: white;
-    text-decoration: none;
-    backdrop-filter: blur(8px);
-    animation: landing-bounce 2s ease-in-out infinite;
-    transition: background 0.2s;
-}
-
-.landing-hero-scroll svg {
-    width: 20px;
-    height: 20px;
-}
-
-.landing-hero-scroll:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
-
-@keyframes landing-bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-}
-
 .btn-hero-primary {
     padding: 0.85rem 2rem;
     font-size: 1rem;
@@ -1579,10 +1544,6 @@ body {
 
     .landing-stat strong {
         font-size: 1.45rem;
-    }
-
-    .landing-hero-scroll {
-        bottom: 1.25rem;
     }
 
     .landing-hotels-grid {
