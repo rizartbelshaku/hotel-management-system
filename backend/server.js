@@ -1,27 +1,25 @@
-// Importojme dependencies
 const express = require('express');
 const dotenv = require('dotenv').config();
-const connectDB = require('./connect/database');
-
-const {errorHandler}= require('./middlewares/errorMiddleware');
+const cors = require('cors');
+const { initDB } = require('./connect/database');
+const { errorHandler } = require('./middlewares/errorMiddleware');
 
 const port = process.env.PORT || 5000;
 
-//Lidhemi me db e mongos
-connectDB();
+initDB();
 
-//Inicializojme expreessin ne nje variabel app
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//Routes
-app.use('/api/tasks', require('./routes/taskRoutes'));
-app.use('/api/users' , require('./routes/userRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/hotels', require('./routes/hotelRoutes'));
+app.use('/api/rooms', require('./routes/roomRoutes'));
+app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
-//Middlewares
 app.use(errorHandler);
 
-// Inicializojme pritesin e requesteve
-app.listen(port, () => console.log(`Server is running on port ${port}`))
+app.listen(port, () => console.log(`Server is running on port ${port}`));
