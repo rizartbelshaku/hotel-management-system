@@ -74,7 +74,7 @@ const Dashboard = () => {
                   <td>{b.hotel_name}</td>
                   <td>{b.room_number}</td>
                   <td>{b.check_in_date?.slice(0, 10)}</td>
-                  <td>${b.total_price}</td>
+                  <td className="table-cell-price">${b.total_price}</td>
                   <td><span className={`status-badge ${statusClass(b.status)}`}>{b.status}</span></td>
                 </tr>
               ))}

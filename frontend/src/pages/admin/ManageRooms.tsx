@@ -176,8 +176,12 @@ const ManageRooms = () => {
                 <tr key={r.id}>
                   <td>{r.room_number}</td>
                   <td>{r.type}</td>
-                  <td>${r.price}</td>
-                  <td>{r.available ? 'Yes' : 'No'}</td>
+                  <td className="table-cell-price">${r.price}</td>
+                  <td>
+                    <span className={`availability-badge ${r.available ? 'availability-yes' : 'availability-no'}`}>
+                      {r.available ? 'Yes' : 'No'}
+                    </span>
+                  </td>
                   <td className="actions">
                     <button onClick={() => handleEdit(r)} className="btn btn-outline btn-sm">Edit</button>
                     <button onClick={() => handleDelete(r.id)} className="btn btn-danger btn-sm">Delete</button>

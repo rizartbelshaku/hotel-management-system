@@ -72,7 +72,7 @@ const MyReservations = () => {
                   <td>{b.room_number} ({b.room_type})</td>
                   <td>{b.check_in_date?.slice(0, 10)}</td>
                   <td>{b.check_out_date?.slice(0, 10)}</td>
-                  <td>${b.total_price}</td>
+                  <td className="table-cell-price">${b.total_price}</td>
                   <td><span className={`status-badge ${statusClass(b.status)}`}>{b.status}</span></td>
                   <td>
                     {b.status === 'Pending' && (
