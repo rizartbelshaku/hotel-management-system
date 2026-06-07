@@ -70,9 +70,9 @@ const ManageReservations = () => {
                   <td>{b.room_number}</td>
                   <td>{b.check_in_date?.slice(0, 10)}</td>
                   <td>{b.check_out_date?.slice(0, 10)}</td>
-                  <td>${b.total_price}</td>
+                  <td className="table-cell-price">${b.total_price}</td>
                   <td><span className={`status-badge ${statusClass(b.status)}`}>{b.status}</span></td>
-                  <td>
+                  <td className="actions">
                     <select
                       value={b.status}
                       onChange={(e) => handleStatusChange(b.id, e.target.value)}
